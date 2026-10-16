@@ -1,0 +1,300 @@
+@import "tailwindcss";
+
+/* Design tokens — Stitch "Stock Metadata Studio" neo-brutalist system.
+   ponytail: PRD §7 lists 14px/10px radii; Stitch system says 6px/4px — Stitch wins per PRD priority order. */
+@theme {
+  --color-canvas: #ffe600;
+  --color-surface: #ffffff;
+  --color-ink: #111111;
+  --color-emerald: #00e073;
+  --color-pink: #ff3388;
+  --color-purple: #8833ff;
+  --color-amber: #ffa700;
+
+  --font-display: "Space Grotesk", "Arial Black", sans-serif;
+  --font-body: "Work Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-weight: 500;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  /* Visible focus rings everywhere (PRD §7 accessibility) */
+  *:focus-visible {
+    outline: 3px solid var(--color-purple);
+    outline-offset: 2px;
+  }
+}
+
+/* ---- Neo-brutalist primitives: 3px black borders, hard offset shadows, no blur ---- */
+
+.card {
+  background-color: var(--color-surface);
+  border: 3px solid var(--color-ink);
+  border-radius: 6px;
+  box-shadow: 6px 6px 0 var(--color-ink);
+}
+
+.card-sm {
+  background-color: var(--color-surface);
+  border: 3px solid var(--color-ink);
+  border-radius: 6px;
+  box-shadow: 4px 4px 0 var(--color-ink);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: 3px solid var(--color-ink);
+  border-radius: 4px;
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  font-weight: 700;
+  line-height: 1.15;
+  padding: 0.45rem 0.85rem;
+  box-shadow: 4px 4px 0 var(--color-ink);
+  transition: transform 60ms linear, box-shadow 60ms linear;
+  cursor: pointer;
+  user-select: none;
+}
+.btn:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 var(--color-ink);
+}
+/* Press-collapse: shadow disappears, button drops onto its own shadow */
+.btn:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--color-ink);
+}
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  box-shadow: 2px 2px 0 var(--color-ink);
+  transform: none;
+}
+
+.btn-primary { background-color: var(--color-emerald); }
+.btn-ai { background-color: var(--color-purple); color: #ffffff; }
+.btn-danger { background-color: var(--color-pink); }
+.btn-warn { background-color: var(--color-amber); }
+
+/* Icon micro-button (chip ×, reorder ↑↓) */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-ink);
+  border-radius: 4px;
+  background-color: var(--color-surface);
+  box-shadow: 2px 2px 0 var(--color-ink);
+  padding: 0.1rem;
+  cursor: pointer;
+  transition: transform 60ms linear, box-shadow 60ms linear;
+}
+.btn-icon:hover:not(:disabled) { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--color-ink); }
+.btn-icon:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 0 0 0; }
+.btn-icon:disabled { cursor: not-allowed; opacity: 0.4; transform: none; }
+
+.input {
+  width: 100%;
+  background-color: var(--color-surface);
+  border: 3px solid var(--color-ink);
+  border-radius: 4px;
+  padding: 0.5rem 0.7rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--color-ink);
+}
+.input::placeholder { color: #6b6b6b; }
+/* Focus state: cream bg + hard shadow (design system) */
+.input:focus {
+  background-color: #fffbe6;
+  outline: none;
+  box-shadow: 4px 4px 0 var(--color-ink);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border: 2px solid var(--color-ink);
+  border-radius: 4px;
+  background-color: var(--color-surface);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.12rem 0.15rem 0.12rem 0.4rem;
+}
+
+/* Badges: always carry a text label, never color-only */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border: 2px solid var(--color-ink);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.1rem 0.45rem;
+  line-height: 1.3;
+}
+.badge-error { background-color: var(--color-pink); }
+.badge-warn { background-color: var(--color-amber); }
+.badge-info { background-color: #e9e4ff; }
+.badge-ok { background-color: var(--color-emerald); }
+
+.rule { border-top: 3px solid var(--color-ink); }
+
+.mono { font-family: var(--font-mono); font-weight: 600; }
+
+/* ---- Stitch workspace shell: tabs, sticky CTA, tables, chips, cards ---- */
+
+.tabbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: var(--color-canvas);
+  border-bottom: 3px solid var(--color-ink);
+}
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 3px solid var(--color-ink);
+  border-radius: 4px;
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 0.4rem 0.65rem;
+  box-shadow: 3px 3px 0 var(--color-ink);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 60ms linear, box-shadow 60ms linear;
+}
+.tab:hover:not(.tab-active) { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--color-ink); }
+.tab:active:not(.tab-active) { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--color-ink); }
+.tab-active { background-color: var(--color-emerald); }
+.tab-count {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  border: 2px solid var(--color-ink);
+  border-radius: 4px;
+  background-color: var(--color-surface);
+  padding: 0 0.3rem;
+}
+.tab-count-danger { background-color: var(--color-pink); color: #ffffff; }
+
+/* Sticky bottom CTA bar + layout spacer that keeps content clear of it */
+.sticky-cta {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 60;
+  max-height: 70vh;
+  overflow: auto;
+  background-color: var(--color-surface);
+  border-top: 3px solid var(--color-ink);
+}
+.cta-spacer { height: 6rem; }
+
+/* Table primitives: fixed layout, black header, hard row borders */
+.tbl { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.tbl th {
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background-color: var(--color-ink);
+  color: #ffffff;
+  padding: 0.45rem 0.6rem;
+  border: 2px solid var(--color-ink);
+}
+.tbl td {
+  padding: 0.5rem 0.6rem;
+  border: 2px solid var(--color-ink);
+  vertical-align: middle;
+  background-color: var(--color-surface);
+}
+.tbl tbody tr:hover td { background-color: #fff6bf; }
+
+/* Hazard-striped progress fill (active queue) */
+.progress-hazard {
+  background-image: repeating-linear-gradient(45deg, var(--color-amber) 0 10px, var(--color-ink) 10px 20px);
+}
+
+/* Hero stat chip */
+.stat-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  border: 3px solid var(--color-ink);
+  border-radius: 4px;
+  background-color: var(--color-surface);
+  box-shadow: 4px 4px 0 var(--color-ink);
+  padding: 0.35rem 0.65rem;
+}
+
+/* Slot cards (queue stats) */
+.slot {
+  border: 3px solid var(--color-ink);
+  border-radius: 6px;
+  background-color: var(--color-surface);
+  box-shadow: 4px 4px 0 var(--color-ink);
+  padding: 0.6rem;
+}
+.slot-total { background-color: #e9e4ff; }
+.slot-done { background-color: var(--color-emerald); }
+.slot-failed { background-color: var(--color-pink); }
+.slot-waiting { background-color: var(--color-amber); }
+
+/* Filter chips */
+.fchip {
+  border: 2px solid var(--color-ink);
+  border-radius: 4px;
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 0.25rem 0.55rem;
+  box-shadow: 2px 2px 0 var(--color-ink);
+  cursor: pointer;
+  transition: transform 60ms linear, box-shadow 60ms linear;
+}
+.fchip:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--color-ink); }
+.fchip:active { transform: translate(2px, 2px); box-shadow: 0 0 0; }
+.fchip-active { background-color: var(--color-purple); color: #ffffff; }
+
+/* Export format cards */
+.fcard {
+  display: grid;
+  gap: 0.3rem;
+  width: 100%;
+  text-align: left;
+  border: 3px solid var(--color-ink);
+  border-radius: 6px;
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: 4px 4px 0 var(--color-ink);
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: transform 60ms linear, box-shadow 60ms linear;
+}
+.fcard:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--color-ink); }
+.fcard-selected { background-color: var(--color-emerald); box-shadow: 6px 6px 0 var(--color-ink); }
+
+/* Dashed dropzone variant of .card (utilities can't override .card's unlayered border) */
+.dropzone { border-style: dashed; }
